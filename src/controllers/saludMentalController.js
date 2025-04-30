@@ -36,7 +36,7 @@ exports.responseOnBoardingSaludMental = async (req, res) => {
     try {
         const { message } = req.body;
 
-        if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
+ /*        if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
             const structuredData = message.analysis.structuredData;
             console.log("📋 Datos recibidos en /vapi/responseOnBoardingSaludMental:", structuredData);
 
@@ -63,6 +63,35 @@ exports.responseOnBoardingSaludMental = async (req, res) => {
 
     } catch (error) {
         console.error("❌ Error en onboardingResponse:", error.message);
+        res.status(500).json({ error: "Error al procesar los datos" });
+    }
+}; */
+
+        if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
+            const structuredData = message.analysis.structuredData;
+
+            // Crear el objeto con la estructura deseada
+            const formattedData = {
+                NombreCompleto: structuredData.NombreCompleto || "N/A",
+                Telefono: structuredData.Telefono || "N/A",
+                DocumentoIdentidad: {
+                    Tipo: structuredData.DocumentoIdentidad?.Tipo || "N/A",
+                    Numero: structuredData.DocumentoIdentidad?.Numero || "N/A"
+                },
+                FechaEntrevista: structuredData.FechaEntrevista || "N/A"
+            };
+
+            // Imprimir el objeto en la consola
+            console.log("📋 Datos estructurados recibidos:", formattedData);
+
+            res.status(200).json({ message: "Datos procesados correctamente y mostrados en consola." });
+        } else {
+            console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
+            res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
+        }
+
+    } catch (error) {
+        console.error("❌ Error en responseOnBoardingSaludMental:", error.message);
         res.status(500).json({ error: "Error al procesar los datos" });
     }
 };
