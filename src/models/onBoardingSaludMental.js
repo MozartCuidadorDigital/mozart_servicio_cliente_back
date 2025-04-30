@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const OnBoardingCallSchema = mongoose.Schema({
+const onBoardingSaludMentalSchema = mongoose.Schema({
   NombreCompleto: {
     type: String,
     required: true,
@@ -29,6 +29,6 @@ const OnBoardingCallSchema = mongoose.Schema({
   },
 });
 
-const OnBoardingCall = mongoose.model('OnBoardingCall', OnBoardingCallSchema);
+const onBoardingSaludMental = mongoose.model('onBoardingSaludMental', onBoardingSaludMentalSchema);
 
-module.exports = OnBoardingCall;
+module.exports = onBoardingSaludMental;

@@ -1,5 +1,5 @@
 const axios = require('axios');
-const OnBoardingCall = require('../models/OnBoardingCall'); // Importar el modelo específico
+const onBoardingSaludMental = require('../models/onBoardingSaludMental'); // Importar el modelo específico
 
 exports.onBoardingSaludMental = async (req, res) => {
     try {
@@ -42,7 +42,7 @@ exports.responseOnBoardingSaludMental = async (req, res) => {
       console.log("📋 Datos recibidos en /api/responseOnBoardingSaludMental:", structuredData);
 
       // Crear un nuevo documento en la colección de MongoDB específica para onboarding
-      const newCall = new OnBoardingCall({
+      const newCall = new onBoardingSaludMental({
         NombreCompleto: structuredData.NombreCompleto,
         Telefono: structuredData.Telefono,
         DocumentoIdentidad: {
@@ -69,12 +69,12 @@ exports.responseOnBoardingSaludMental = async (req, res) => {
 
 exports.consultOnBoardingSaludMental = async (req, res) => {
   try {
-    // Consultar todas las llamadas de la colección OnBoardingCall
-    const calls = await OnBoardingCall.find();
+    // Consultar todas las llamadas de la colección onBoardingSaludMental
+    const calls = await onBoardingSaludMental.find();
 
     res.status(200).json(calls);
   } catch (error) {
     console.error("❌ Error en consultOnBoardingSaludMental:", error.message);
-    res.status(500).json({ error: "Error al consultar las llamadas de onboarding" });
+    res.status(500).json({ error: "Error al consultar las llamadas de onBoardingSaludMental" });
   }
 };
