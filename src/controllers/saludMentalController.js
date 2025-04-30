@@ -34,35 +34,21 @@ exports.onBoardingSaludMental = async (req, res) => {
 
 
 exports.responseOnBoardingSaludMental = async (req, res) => {
-  try {
-    const { message } = req.body;
+    try {
+        const { message } = req.body;
 
-    if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
-      const structuredData = message.analysis.structuredData;
-      console.log("📋 Datos recibidos en /vapi/responseOnBoardingSaludMental:", structuredData);
+        if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
+            const structuredData = message.analysis.structuredData;
+            console.log("📋 Datos recibidos en /api/responseOnBoardingSaludMental:", structuredData);
 
-      // Crear un nuevo documento en la colección de MongoDB
-      const newCall = new Call({
-        NombreCompleto: structuredData.NombreCompleto,
-        Telefono: structuredData.Telefono,
-        DocumentoIdentidad: {
-          Tipo: structuredData.DocumentoIdentidad.Tipo,
-          Numero: structuredData.DocumentoIdentidad.Numero,
-        },
-        FechaEntrevista: structuredData.FechaEntrevista,
-      });
 
-      // Guardar en la base de datos
-      await newCall.save();
+        } else {
+            console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
+            res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
+        }
 
-      console.log("✅ Datos guardados correctamente en MongoDB");
-      res.status(200).json({ message: "Datos procesados y guardados correctamente en MongoDB" });
-    } else {
-      console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
-      res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
+    } catch (error) {
+        console.error("❌ Error en onboardingResponse:", error.message);
+        res.status(500).json({ error: "Error al procesar los datos" });
     }
-  } catch (error) {
-    console.error("❌ Error en responseOnBoardingSaludMental:", error.message);
-    res.status(500).json({ error: "Error al procesar los datos" });
-  }
 };
