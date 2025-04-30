@@ -1,5 +1,5 @@
 const axios = require('axios');
-const mongoose = require('mongoose');
+const OnBoardingCall = require('../models/OnBoardingCall'); // Importar el modelo específico
 
 exports.onBoardingSaludMental = async (req, res) => {
     try {
@@ -35,30 +35,14 @@ exports.onBoardingSaludMental = async (req, res) => {
 
 exports.responseOnBoardingSaludMental = async (req, res) => {
   try {
-    const { message, assistant } = req.body;
+    const { message } = req.body;
 
     if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
       const structuredData = message.analysis.structuredData;
-      console.log("📋 Datos recibidos en /vapi/responseOnBoardingSaludMental:", structuredData);
+      console.log("📋 Datos recibidos en /api/responseOnBoardingSaludMental:", structuredData);
 
-      // Crear un modelo dinámico basado en el asistente
-      const DynamicCallModel = mongoose.model(
-        assistant, // Nombre de la colección dinámico
-        new mongoose.Schema({
-          NombreCompleto: { type: String, required: true },
-          Telefono: { type: String, required: true },
-          DocumentoIdentidad: {
-            Tipo: { type: String, required: true },
-            Numero: { type: String, required: true },
-          },
-          FechaEntrevista: { type: String, required: true },
-          createdAt: { type: Date, default: Date.now },
-        }),
-        assistant // Nombre de la colección en MongoDB
-      );
-
-      // Crear un nuevo documento en la colección dinámica
-      const newCall = new DynamicCallModel({
+      // Crear un nuevo documento en la colección de MongoDB específica para onboarding
+      const newCall = new OnBoardingCall({
         NombreCompleto: structuredData.NombreCompleto,
         Telefono: structuredData.Telefono,
         DocumentoIdentidad: {
@@ -71,8 +55,8 @@ exports.responseOnBoardingSaludMental = async (req, res) => {
       // Guardar en la base de datos
       await newCall.save();
 
-      console.log(`✅ Datos guardados correctamente en la colección ${assistant}`);
-      res.status(200).json({ message: `Datos procesados y guardados correctamente en la colección ${assistant}` });
+      console.log("✅ Datos guardados correctamente en la colección OnBoardingSaludMental");
+      res.status(200).json({ message: "Datos procesados y guardados correctamente en MongoDB" });
     } else {
       console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
       res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
@@ -83,24 +67,14 @@ exports.responseOnBoardingSaludMental = async (req, res) => {
   }
 };
 
-// Nueva función para consultar las llamadas
 exports.consultOnBoardingSaludMental = async (req, res) => {
   try {
-    const { assistant } = req.query;
-
-    if (!assistant) {
-      return res.status(400).json({ error: "El parámetro 'assistant' es requerido." });
-    }
-
-    // Crear un modelo dinámico basado en el asistente
-    const DynamicCallModel = mongoose.model(assistant);
-
-    // Consultar todas las llamadas de la colección correspondiente
-    const calls = await DynamicCallModel.find();
+    // Consultar todas las llamadas de la colección OnBoardingCall
+    const calls = await OnBoardingCall.find();
 
     res.status(200).json(calls);
   } catch (error) {
     console.error("❌ Error en consultOnBoardingSaludMental:", error.message);
-    res.status(500).json({ error: "Error al consultar las llamadas" });
+    res.status(500).json({ error: "Error al consultar las llamadas de onboarding" });
   }
 };

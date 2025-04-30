@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const CallSchema = mongoose.Schema({
+const OnBoardingCallSchema = mongoose.Schema({
   NombreCompleto: {
     type: String,
     required: true,
@@ -29,6 +29,6 @@ const CallSchema = mongoose.Schema({
   },
 });
 
-const Call = mongoose.model('Call', CallSchema);
+const OnBoardingCall = mongoose.model('OnBoardingCall', OnBoardingCallSchema);
 
-module.exports = Call;
+module.exports = OnBoardingCall;
