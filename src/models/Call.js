@@ -1,20 +1,32 @@
-// backend/src/models/Call.js
 const mongoose = require('mongoose');
 
 const CallSchema = mongoose.Schema({
-  // Campo para almacenar el análisis proporcionado por Vapi
-  analysis: {
-    type: String, // Vapi suele devolver el análisis como string en el payload principal
-    required: true
+  NombreCompleto: {
+    type: String,
+    required: true,
   },
-  // Opcional: Puedes guardar el payload completo si lo necesitas en el futuro
-  // vapiPayload: {
-  //   type: mongoose.Schema.Types.Mixed // Usa Mixed para datos flexibles
-  // },
+  Telefono: {
+    type: String,
+    required: true,
+  },
+  DocumentoIdentidad: {
+    Tipo: {
+      type: String,
+      required: true,
+    },
+    Numero: {
+      type: String,
+      required: true,
+    },
+  },
+  FechaEntrevista: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 const Call = mongoose.model('Call', CallSchema);

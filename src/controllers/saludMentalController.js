@@ -1,4 +1,5 @@
 const axios = require('axios');
+const Call = require('../models/Call'); // Importar el modelo Call
 
 exports.onBoardingSaludMental = async (req, res) => {
     try {
@@ -33,65 +34,35 @@ exports.onBoardingSaludMental = async (req, res) => {
 
 
 exports.responseOnBoardingSaludMental = async (req, res) => {
-    try {
-        const { message } = req.body;
+  try {
+    const { message } = req.body;
 
- /*        if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
-            const structuredData = message.analysis.structuredData;
-            console.log("📋 Datos recibidos en /vapi/responseOnBoardingSaludMental:", structuredData);
+    if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
+      const structuredData = message.analysis.structuredData;
+      console.log("📋 Datos recibidos en /vapi/responseOnBoardingSaludMental:", structuredData);
 
-            // Enviar los datos a la API externa
-            try {
-                const apiResponse = await axios.post(
-                    "https://mozart-nuevo-backend.vercel.app/api/admin/createPatientNoCategory",
-                    structuredData,
-                    { headers: { "Content-Type": "application/json" } }
-                );
+      // Crear un nuevo documento en la colección de MongoDB
+      const newCall = new Call({
+        NombreCompleto: structuredData.NombreCompleto,
+        Telefono: structuredData.Telefono,
+        DocumentoIdentidad: {
+          Tipo: structuredData.DocumentoIdentidad.Tipo,
+          Numero: structuredData.DocumentoIdentidad.Numero,
+        },
+        FechaEntrevista: structuredData.FechaEntrevista,
+      });
 
-                console.log("✅ Datos enviados correctamente a la API:", apiResponse.data);
-                res.status(200).json({ message: "Datos procesados y enviados correctamente" });
+      // Guardar en la base de datos
+      await newCall.save();
 
-            } catch (apiError) {
-                console.error("❌ Error al enviar datos a la API externa:", apiError.response?.data || apiError.message);
-                res.status(500).json({ error: "Error al enviar los datos a la API externa" });
-            }
-
-        } else {
-            console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
-            res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
-        }
-
-    } catch (error) {
-        console.error("❌ Error en onboardingResponse:", error.message);
-        res.status(500).json({ error: "Error al procesar los datos" });
+      console.log("✅ Datos guardados correctamente en MongoDB");
+      res.status(200).json({ message: "Datos procesados y guardados correctamente en MongoDB" });
+    } else {
+      console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
+      res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
     }
-}; */
-
-        if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
-            const structuredData = message.analysis.structuredData;
-
-            // Crear el objeto con la estructura deseada
-            const formattedData = {
-                NombreCompleto: structuredData.NombreCompleto || "N/A",
-                Telefono: structuredData.Telefono || "N/A",
-                DocumentoIdentidad: {
-                    Tipo: structuredData.DocumentoIdentidad?.Tipo || "N/A",
-                    Numero: structuredData.DocumentoIdentidad?.Numero || "N/A"
-                },
-                FechaEntrevista: structuredData.FechaEntrevista || "N/A"
-            };
-
-            // Imprimir el objeto en la consola
-            console.log("📋 Datos estructurados recibidos:", formattedData);
-
-            res.status(200).json({ message: "Datos procesados correctamente y mostrados en consola." });
-        } else {
-            console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
-            res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
-        }
-
-    } catch (error) {
-        console.error("❌ Error en responseOnBoardingSaludMental:", error.message);
-        res.status(500).json({ error: "Error al procesar los datos" });
-    }
+  } catch (error) {
+    console.error("❌ Error en responseOnBoardingSaludMental:", error.message);
+    res.status(500).json({ error: "Error al procesar los datos" });
+  }
 };

@@ -1,12 +1,12 @@
 // backend/src/server.js
 const express = require('express');
 const dotenv = require('dotenv');
-//const connectDB = require('./src/config/db');
+const connectDB = require('./src/config/db');
 const saludMentalRoutes = require('./src/routes/saludMentalRoutes');
 const cors = require('cors'); // Importar cors
 
 dotenv.config(); // Cargar variables de entorno
-//connectDB(); // Conectar a la base de datos
+connectDB(); // Conectar a la base de datos
 
 const app = express();
 
