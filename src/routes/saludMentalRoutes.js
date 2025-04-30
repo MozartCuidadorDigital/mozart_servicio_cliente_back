@@ -6,6 +6,7 @@ const {onBoardingSaludMental, responseOnBoardingSaludMental} = require('../contr
 // Ruta para onBoarding Salud Mental
 router.post('/onBoardingSaludMental', onBoardingSaludMental);
 router.post('/responseOnBoardingSaludMental', responseOnBoardingSaludMental);
+//router.get('/consultOnBoardingSaludMental', consultOnBoardingSaludMental);
 
 /* // Ruta para Entrevista Salud Mental
 router.post('/entrevistaSaludMental', entrevistaSaludMental);
