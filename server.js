@@ -1,10 +1,9 @@
 // backend/src/server.js
-import express, { json, urlencoded } from 'express';
-import cors from 'cors';
-import saludMentalRoutes from './routes/saludMentalRoutes.js';
-import dotenv from 'dotenv';
-
+const express = require('express');
+const dotenv = require('dotenv');
 //const connectDB = require('./src/config/db');
+const saludMentalRoutes = require('./src/routes/saludMentalRoutes');
+const cors = require('cors'); // Importar cors
 
 dotenv.config(); // Cargar variables de entorno
 //connectDB(); // Conectar a la base de datos
@@ -15,9 +14,7 @@ const app = express();
 app.use(cors());
 
 // Middleware para parsear el cuerpo de las peticiones como JSON
-app.use(json());
-app.use(urlencoded({ extended: true }));
-
+app.use(express.json());
 
 // Montar las rutas de llamadas
 app.use('/api/saludMental', saludMentalRoutes);
