@@ -8,11 +8,12 @@ router.post('/onBoardingSaludMental', onBoardingSaludMental);
 router.post('/responseOnBoardingSaludMental', responseOnBoardingSaludMental);
 router.get('/consultOnBoardingSaludMental', consultOnBoardingSaludMental);
 
-/* // Ruta para Entrevista Salud Mental
+// Ruta para Entrevista Salud Mental
 router.post('/entrevistaSaludMental', entrevistaSaludMental);
-router.post('/responseentrevistaSaludMental', responseentrevistaSaludMental);
+//router.post('/responseentrevistaSaludMental', responseentrevistaSaludMental);
+//router.get('/consultEntrevistaSaludMental', consultEntrevistaSaludMental);
 
-// Ruta para Seguimiento Salud Mental
+/* // Ruta para Seguimiento Salud Mental
 router.post('/seguimientoSaludMental', seguimientoSaludMental);
 router.post('/responseseguimientoSaludMental', responseseguimientoSaludMental); */
 
