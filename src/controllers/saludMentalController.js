@@ -103,7 +103,6 @@ exports.responseOnBoardingSaludMental = async (req, res) => {
 
     if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
       const structuredData = message.analysis.structuredData;
-      console.log("📋 structuredData recibido:", JSON.stringify(structuredData, null, 2));
       console.log("📋 Datos recibidos en /api/responseOnBoardingSaludMental:", structuredData);
 
       // Crear un nuevo documento en la colección de MongoDB específica para onboarding
@@ -136,42 +135,13 @@ exports.responseEntrevistaSaludMental = async (req, res) => {
   try {
     const { message } = req.body;
 
-    console.log("📥 JSON recibido:", JSON.stringify(req.body, null, 2)); // Log detallado del JSON recibido
-
     if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
       const structuredData = message.analysis.structuredData;
-      console.log("📋 structuredData recibido:", JSON.stringify(structuredData, null, 2));
-      console.log("📋 Datos procesados en /api/responseEntrevistaSaludMental:", structuredData);
+      console.log("📋 Datos recibidos en /api/responseEntrevistaSaludMental:", structuredData);
 
-      // Crear un nuevo documento en la colección de MongoDB específica para entrevista
+      // Crear un nuevo documento en la colección de MongoDB
       const newEntry = new entrevistaSaludMental({
-        TamizajeInicial: {
-          CriteriosInclusion: {
-            PreguntasRespuestas: {
-              edad_18_60: structuredData.CriteriosInclusion?.PreguntasRespuestas?.edad_18_60 || false,
-              reside_bogota_urbano: structuredData.CriteriosInclusion?.PreguntasRespuestas?.reside_bogota_urbano || false,
-              conectividad_internet: structuredData.CriteriosInclusion?.PreguntasRespuestas?.conectividad_internet || false,
-              sintomas_atenuados_post_hosp: structuredData.CriteriosInclusion?.PreguntasRespuestas?.sintomas_atenuados_post_hosp || false,
-              red_apoyo_funcional: structuredData.CriteriosInclusion?.PreguntasRespuestas?.red_apoyo_funcional || false,
-              cuidador_mismo_domicilio: structuredData.CriteriosInclusion?.PreguntasRespuestas?.cuidador_mismo_domicilio || false,
-              perdida_capacidades_impide_metas: structuredData.CriteriosInclusion?.PreguntasRespuestas?.perdida_capacidades_impide_metas || false,
-              consumo_sustancias_problema: structuredData.CriteriosInclusion?.PreguntasRespuestas?.consumo_sustancias_problema || false,
-              adherencia_previa_tratamiento: structuredData.CriteriosInclusion?.PreguntasRespuestas?.adherencia_previa_tratamiento || false,
-            },
-            VeredictoElegibilidad: structuredData.CriteriosInclusion?.VeredictoElegibilidad || "No especificado",
-            JustificacionElegibilidad: structuredData.CriteriosInclusion?.JustificacionElegibilidad || "No especificado",
-            RecomendacionesElegibilidad: structuredData.CriteriosInclusion?.RecomendacionesElegibilidad || "No especificado",
-          },
-          EvaluacionFuncionamientoGlobal: {
-            DificultadesRelacionarseUltimoAnio: structuredData.EvaluacionFuncionamientoGlobal?.DificultadesRelacionarseUltimoAnio || "No especificado",
-            MantenidoActividadesEstructuradas: structuredData.EvaluacionFuncionamientoGlobal?.MantenidoActividadesEstructuradas || "No especificado",
-            EpisodiosCriticosRecientes: structuredData.EvaluacionFuncionamientoGlobal?.EpisodiosCriticosRecientes || "No especificado",
-            NivelEnergiaMotivacion: structuredData.EvaluacionFuncionamientoGlobal?.NivelEnergiaMotivacion || "No especificado",
-            ConductasRiesgo: structuredData.EvaluacionFuncionamientoGlobal?.ConductasRiesgo || "No especificado",
-            ParticipacionSocialComunitaria: structuredData.EvaluacionFuncionamientoGlobal?.ParticipacionSocialComunitaria || "No especificado",
-            ComentariosAdicionalesEvaluador: structuredData.EvaluacionFuncionamientoGlobal?.ComentariosAdicionalesEvaluador || "No especificado",
-          },
-        },
+        TamizajeInicial: structuredData.TamizajeInicial // Usar directamente la estructura completa
       });
 
       // Guardar en la base de datos
