@@ -148,6 +148,6 @@ exports.consultEntrevistaSaludMental = async (req, res) => {
     res.status(200).json(entries);
   } catch (error) {
     console.error("❌ Error en consultEntrevistaSaludMental:", error.message);
-    res.status(500).json({ error: "Error al consultar las entradas de entrevistaSaludMental" });
+    res.status(500).json({ error: "Error al consultar las entradas de EntrevistaSaludMental" });
   }
 };
