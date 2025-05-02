@@ -3,12 +3,17 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./src/config/db');
 const saludMentalRoutes = require('./src/routes/saludMentalRoutes');
+const bodyParser = require('body-parser');
 const cors = require('cors'); // Importar cors
+const app = express();
 
 dotenv.config(); // Cargar variables de entorno
 connectDB(); // Conectar a la base de datos
 
-const app = express();
+
+// Aumentar el límite del tamaño del cuerpo
+app.use(bodyParser.json({ limit: '10mb' })); // Ajusta el límite según sea necesario
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
 // Middleware para permitir CORS desde cualquier origen (puedes restringirlo a tu frontend en producción)
 app.use(cors());

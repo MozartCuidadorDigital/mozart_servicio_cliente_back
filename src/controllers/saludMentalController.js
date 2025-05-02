@@ -135,9 +135,11 @@ exports.responseEntrevistaSaludMental = async (req, res) => {
   try {
     const { message } = req.body;
 
+    console.log("📥 JSON recibido:", JSON.stringify(req.body, null, 2)); // Log detallado del JSON recibido
+
     if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
       const structuredData = message.analysis.structuredData;
-      console.log("📋 Datos recibidos en /api/responseEntrevistaSaludMental:", structuredData);
+      console.log("📋 Datos procesados en /api/responseEntrevistaSaludMental:", structuredData);
 
       // Crear un nuevo documento en la colección de MongoDB específica para entrevista
       const newEntry = new entrevistaSaludMental({
