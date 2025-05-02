@@ -1,5 +1,7 @@
 const axios = require('axios');
 const onBoardingSaludMental = require('../models/onBoardingSaludMental'); // Importar el modelo específico
+const entrevistaSaludMental = require('../models/entrevistaSaludMental'); // Importar el modelo
+
 
 exports.onBoardingSaludMental = async (req, res) => {
     try {
@@ -98,6 +100,34 @@ exports.responseOnBoardingSaludMental = async (req, res) => {
   }
 };
 
+exports.responseEntrevistaSaludMental = async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
+      const structuredData = message.analysis.structuredData;
+      console.log("📋 Datos recibidos en /api/responseEntrevistaSaludMental:", structuredData);
+
+      // Crear un nuevo documento en la colección de MongoDB específica para entrevista
+      const newEntry = new entrevistaSaludMental({
+        TamizajeInicial: structuredData.TamizajeInicial,
+      });
+
+      // Guardar en la base de datos
+      await newEntry.save();
+
+      console.log("✅ Datos guardados correctamente en la colección EntrevistaSaludMental");
+      res.status(200).json({ message: "Datos procesados y guardados correctamente en MongoDB" });
+    } else {
+      console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
+      res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
+    }
+  } catch (error) {
+    console.error("❌ Error en responseEntrevistaSaludMental:", error.message);
+    res.status(500).json({ error: "Error al procesar los datos" });
+  }
+};
+
 exports.consultOnBoardingSaludMental = async (req, res) => {
   try {
     // Consultar todas las llamadas de la colección onBoardingSaludMental
@@ -107,5 +137,17 @@ exports.consultOnBoardingSaludMental = async (req, res) => {
   } catch (error) {
     console.error("❌ Error en consultOnBoardingSaludMental:", error.message);
     res.status(500).json({ error: "Error al consultar las llamadas de onBoardingSaludMental" });
+  }
+};
+
+exports.consultEntrevistaSaludMental = async (req, res) => {
+  try {
+    // Consultar todas las entradas de la colección EntrevistaSaludMental
+    const entries = await entrevistaSaludMental.find();
+
+    res.status(200).json(entries);
+  } catch (error) {
+    console.error("❌ Error en consultEntrevistaSaludMental:", error.message);
+    res.status(500).json({ error: "Error al consultar las entradas de entrevistaSaludMental" });
   }
 };
