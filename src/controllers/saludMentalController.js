@@ -108,34 +108,11 @@ exports.responseEntrevistaSaludMental = async (req, res) => {
       const structuredData = message.analysis.structuredData;
       console.log("📋 Datos recibidos en /api/responseEntrevistaSaludMental:", structuredData);
 
-      // Reestructurar los datos para que coincidan con el esquema
+      // Crear un nuevo documento en la colección de MongoDB específica para entrevista
       const newEntry = new entrevistaSaludMental({
         TamizajeInicial: {
-          CriteriosInclusion: {
-            PreguntasRespuestas: {
-              edad_18_60: structuredData.TamizajeInicial?.CriteriosInclusion?.PreguntasRespuestas?.edad_18_60 || false,
-              reside_bogota_urbano: structuredData.TamizajeInicial?.CriteriosInclusion?.PreguntasRespuestas?.reside_bogota_urbano || false,
-              conectividad_internet: structuredData.TamizajeInicial?.CriteriosInclusion?.PreguntasRespuestas?.conectividad_internet || false,
-              sintomas_atenuados_post_hosp: structuredData.TamizajeInicial?.CriteriosInclusion?.PreguntasRespuestas?.sintomas_atenuados_post_hosp || false,
-              red_apoyo_funcional: structuredData.TamizajeInicial?.CriteriosInclusion?.PreguntasRespuestas?.red_apoyo_funcional || false,
-              cuidador_mismo_domicilio: structuredData.TamizajeInicial?.CriteriosInclusion?.PreguntasRespuestas?.cuidador_mismo_domicilio || false,
-              perdida_capacidades_impide_metas: structuredData.TamizajeInicial?.CriteriosInclusion?.PreguntasRespuestas?.perdida_capacidades_impide_metas || false,
-              consumo_sustancias_problema: structuredData.TamizajeInicial?.CriteriosInclusion?.PreguntasRespuestas?.consumo_sustancias_problema || false,
-              adherencia_previa_tratamiento: structuredData.TamizajeInicial?.CriteriosInclusion?.PreguntasRespuestas?.adherencia_previa_tratamiento || false,
-            },
-            VeredictoElegibilidad: structuredData.TamizajeInicial?.CriteriosInclusion?.VeredictoElegibilidad || '',
-            JustificacionElegibilidad: structuredData.TamizajeInicial?.CriteriosInclusion?.JustificacionElegibilidad || '',
-            RecomendacionesElegibilidad: structuredData.TamizajeInicial?.CriteriosInclusion?.RecomendacionesElegibilidad || '',
-          },
-          EvaluacionFuncionamientoGlobal: {
-            DificultadesRelacionarseUltimoAnio: structuredData.TamizajeInicial?.EvaluacionFuncionamientoGlobal?.DificultadesRelacionarseUltimoAnio || '',
-            MantenidoActividadesEstructuradas: structuredData.TamizajeInicial?.EvaluacionFuncionamientoGlobal?.MantenidoActividadesEstructuradas || '',
-            EpisodiosCriticosRecientes: structuredData.TamizajeInicial?.EvaluacionFuncionamientoGlobal?.EpisodiosCriticosRecientes || '',
-            NivelEnergiaMotivacion: structuredData.TamizajeInicial?.EvaluacionFuncionamientoGlobal?.NivelEnergiaMotivacion || '',
-            ConductasRiesgo: structuredData.TamizajeInicial?.EvaluacionFuncionamientoGlobal?.ConductasRiesgo || '',
-            ParticipacionSocialComunitaria: structuredData.TamizajeInicial?.EvaluacionFuncionamientoGlobal?.ParticipacionSocialComunitaria || '',
-            ComentariosAdicionalesEvaluador: structuredData.TamizajeInicial?.EvaluacionFuncionamientoGlobal?.ComentariosAdicionalesEvaluador || '',
-          },
+          CriteriosInclusion: structuredData.CriteriosInclusion || {},
+          EvaluacionFuncionamientoGlobal: structuredData.EvaluacionFuncionamientoGlobal || {},
         },
       });
 
