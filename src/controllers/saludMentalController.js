@@ -110,7 +110,10 @@ exports.responseEntrevistaSaludMental = async (req, res) => {
 
       // Crear un nuevo documento en la colección de MongoDB específica para entrevista
       const newEntry = new entrevistaSaludMental({
-        TamizajeInicial: structuredData.TamizajeInicial,
+        TamizajeInicial: {
+          CriteriosInclusion: structuredData.CriteriosInclusion || {},
+          EvaluacionFuncionamientoGlobal: structuredData.EvaluacionFuncionamientoGlobal || {},
+        },
       });
 
       // Guardar en la base de datos
