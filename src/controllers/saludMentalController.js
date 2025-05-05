@@ -1,6 +1,7 @@
 const axios = require('axios');
 const onBoardingSaludMental = require('../models/onBoardingSaludMental'); // Importar el modelo específico
 const entrevistaSaludMental = require('../models/entrevistaSaludMental'); // Importar el modelo
+const seguimientoSaludMental = require('../models/seguimientoSaludMental'); // Importar el modelo
 
 
 exports.onBoardingSaludMental = async (req, res) => {
@@ -159,6 +160,34 @@ exports.responseEntrevistaSaludMental = async (req, res) => {
   }
 };
 
+exports.responseSeguimientoSaludMental = async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
+      const structuredData = message.analysis.structuredData;
+      console.log("📋 Datos recibidos en /api/responseSeguimientoSaludMental:", structuredData);
+
+      // Crear un nuevo documento en la colección de MongoDB
+      const newEntry = new seguimientoSaludMental({
+        AtencionUrgenciaDepresion: structuredData.AtencionUrgenciaDepresion,
+      });
+
+      // Guardar en la base de datos
+      await newEntry.save();
+
+      console.log("✅ Datos guardados correctamente en la colección SeguimientoSaludMental");
+      res.status(200).json({ message: "Datos procesados y guardados correctamente en MongoDB" });
+    } else {
+      console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
+      res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
+    }
+  } catch (error) {
+    console.error("❌ Error en responseSeguimientoSaludMental:", error.message);
+    res.status(500).json({ error: "Error al procesar los datos" });
+  }
+};
+
 exports.consultOnBoardingSaludMental = async (req, res) => {
   try {
     // Consultar todas las llamadas de la colección onBoardingSaludMental
@@ -180,5 +209,17 @@ exports.consultEntrevistaSaludMental = async (req, res) => {
   } catch (error) {
     console.error("❌ Error en consultEntrevistaSaludMental:", error.message);
     res.status(500).json({ error: "Error al consultar las entradas de EntrevistaSaludMental" });
+  }
+};
+
+exports.consultSeguimientoSaludMental = async (req, res) => {
+  try {
+    // Consultar todas las entradas de la colección SeguimientoSaludMental
+    const entries = await seguimientoSaludMental.find();
+
+    res.status(200).json(entries);
+  } catch (error) {
+    console.error("❌ Error en consultSeguimientoSaludMental:", error.message);
+    res.status(500).json({ error: "Error al consultar las entradas de SeguimientoSaludMental" });
   }
 };
