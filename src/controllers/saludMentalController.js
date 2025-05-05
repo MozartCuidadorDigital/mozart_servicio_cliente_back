@@ -72,7 +72,7 @@ exports.seguimientoSaludMental = async (req, res) => {
       axios.post(
           "https://api.vapi.ai/call/phone",
           {
-              assistantId: "ff5d602ec-c5a7-4168-a19d-18fd10a8ee52",
+              assistantId: "f5d602ec-c5a7-4168-a19d-18fd10a8ee52",
               customer: { number: numero },
               phoneNumberId: "7589b5b5-f1f3-42e6-b287-7da895d6a540"
           },
