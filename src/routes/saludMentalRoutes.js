@@ -4,7 +4,6 @@ const router = express.Router();
 const {onBoardingSaludMental, responseOnBoardingSaludMental, consultOnBoardingSaludMental} = require('../controllers/saludMentalController');
 const {entrevistaSaludMental, responseEntrevistaSaludMental, consultEntrevistaSaludMental} = require('../controllers/saludMentalController');
 const {seguimientoSaludMental, responseSeguimientoSaludMental, consultSeguimientoSaludMental} = require('../controllers/saludMentalController');
-const {whatsappBienvenida, whatsappMedicamento, whatsappCitaMedica} = require('../controllers/saludMentalController');
 
 
 // Ruta para onBoarding Salud Mental
@@ -21,10 +20,5 @@ router.get('/consultEntrevistaSaludMental', consultEntrevistaSaludMental);
 router.post('/seguimientoSaludMental', seguimientoSaludMental);
 router.post('/responseseguimientoSaludMental', responseSeguimientoSaludMental);
 router.get('/consultSeguimientoSaludMental', consultSeguimientoSaludMental);
-
-// Ruta para WhatsApp
-router.post('/whatsappBienvenida', whatsappBienvenida);
-router.post('/whatsappMedicamento', whatsappMedicamento);
-router.post('/whatsappCitaMedica', whatsappCitaMedica);
 
 module.exports = router;
