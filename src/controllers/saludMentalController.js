@@ -223,3 +223,200 @@ exports.consultSeguimientoSaludMental = async (req, res) => {
     res.status(500).json({ error: "Error al consultar las entradas de SeguimientoSaludMental" });
   }
 };
+
+
+exports.whatsappBienvenida = async (req, res) => {
+  try {
+    const { numero } = req.body;
+    
+    axios.post(
+      "https://graph.facebook.com/v22.0/587113451151885/messages",
+      {
+        messaging_product: "whatsapp",
+        to: numero,
+        type: "template",
+        template: {
+          name: "notificacion_nuevo_paciente_new",
+          language: {
+            code: "en"
+          },
+          components: [
+            {
+              type: "header",
+              parameters: [
+                {
+                  type: "image",
+                  image: {
+                    link: "https://adresfosyga.co/wp-content/uploads/2020/05/Nueva-EPS-Logo.png"
+                  }
+                }
+              ]
+            },
+            {
+              type: "body",
+              parameters: [
+                {
+                  type: "text",
+                  text: "https://mozart-nuevo-fronted.vercel.app/"
+                },
+                {
+                  type: "text",
+                  text: "usuario@ejemplo.com"
+                },
+                {
+                  type: "text",
+                  text: "123456789"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        headers: {
+          Authorization: "Bearer EAAaTwNpMCk0BOZCdHI0f18pn7lTw8DQ8G68cHEdeKr29pW92bZA4SpQJ7AYhTt9j9kzSAU6Ld67rJqFoR7zt0bRgfdZCFDXhjRXp2UZCG2dwToSrTR9uU4FOZCrTVuAeTwsTZCmIfxvOGZARyoR8ajqn8X7ZCCXa7awgBDiauyZARx2nHCqlIIQa8udZB6aR76Of4H7wZDZD",
+          "Content-Type": "application/json"
+        }
+      }
+    ).then(response => {
+      console.log("✅ Mensaje WhatsApp enviado correctamente:", response.data);
+      res.status(200).json({ message: "Mensaje de WhatsApp enviado correctamente." });
+    }).catch(error => {
+      console.error("❌ Error al enviar mensaje de WhatsApp:", error.response?.data || error.message);
+      res.status(500).json({ error: "Error al enviar mensaje de WhatsApp" });
+    });
+  } catch (error) {
+    console.error("❌ Error en whatsappBienvenida:", error.message);
+    res.status(500).json({ error: "Error al procesar la solicitud" });
+  }
+};
+
+exports.whatsappMedicamento = async (req, res) => {
+  try {
+    const { numero } = req.body;
+    
+    const datosQuemados = {
+      nombrePaciente: "Juan Pérez",
+      medicamento: "Paracetamol",
+      concentracion: "500mg",
+      horaTomaFormateada: "8:00 AM",
+      dosis: "1 tableta",
+      presentacion: "Tabletas",
+      viaAdministracion: "Oral",
+      indicaciones: "Tomar con agua"
+    };
+
+    axios.post(
+      "https://graph.facebook.com/v22.0/587113451151885/messages",
+      {
+        messaging_product: "whatsapp",
+        to: numero,
+        type: "template",
+        template: {
+          name: "nuevo_medicamento_new",
+          language: {
+            code: "en"
+          },
+          components: [
+            {
+              type: "header",
+              parameters: [
+                {
+                  type: "image",
+                  image: {
+                    link: "https://adresfosyga.co/wp-content/uploads/2020/05/Nueva-EPS-Logo.png"
+                  }
+                }
+              ]
+            },
+            {
+              type: "body",
+              parameters: Object.entries(datosQuemados).map(([_, value]) => ({
+                type: "text",
+                text: value
+              }))
+            }
+          ]
+        }
+      },
+      {
+        headers: {
+          Authorization: "Bearer EAAaTwNpMCk0BOZCdHI0f18pn7lTw8DQ8G68cHEdeKr29pW92bZA4SpQJ7AYhTt9j9kzSAU6Ld67rJqFoR7zt0bRgfdZCFDXhjRXp2UZCG2dwToSrTR9uU4FOZCrTVuAeTwsTZCmIfxvOGZARyoR8ajqn8X7ZCCXa7awgBDiauyZARx2nHCqlIIQa8udZB6aR76Of4H7wZDZD",
+          "Content-Type": "application/json"
+        }
+      }
+    ).then(response => {
+      console.log("✅ Mensaje WhatsApp enviado correctamente:", response.data);
+      res.status(200).json({ message: "Mensaje de WhatsApp enviado correctamente." });
+    }).catch(error => {
+      console.error("❌ Error al enviar mensaje de WhatsApp:", error.response?.data || error.message);
+      res.status(500).json({ error: "Error al enviar mensaje de WhatsApp" });
+    });
+  } catch (error) {
+    console.error("❌ Error en whatsappMedicamento:", error.message);
+    res.status(500).json({ error: "Error al procesar la solicitud" });
+  }
+};
+
+exports.whatsappCita = async (req, res) => {
+  try {
+    const { numero } = req.body;
+    
+    const datosQuemados = {
+      Paciente: "Juan Pérez",
+      fechaCitaFormateada: "15 de Marzo de 2024",
+      horaCitaFormateada: "10:30 AM",
+      hospital: "Hospital Central"
+    };
+
+    axios.post(
+      "https://graph.facebook.com/v22.0/587113451151885/messages",
+      {
+        messaging_product: "whatsapp",
+        to: numero,
+        type: "template",
+        template: {
+          name: "notificacion_cita_mozart",
+          language: {
+            code: "en"
+          },
+          components: [
+            {
+              type: "header",
+              parameters: [
+                {
+                  type: "image",
+                  image: {
+                    link: "https://adresfosyga.co/wp-content/uploads/2020/05/Nueva-EPS-Logo.png"
+                  }
+                }
+              ]
+            },
+            {
+              type: "body",
+              parameters: Object.entries(datosQuemados).map(([_, value]) => ({
+                type: "text",
+                text: value
+              }))
+            }
+          ]
+        }
+      },
+      {
+        headers: {
+          Authorization: "Bearer EAAaTwNpMCk0BOZCdHI0f18pn7lTw8DQ8G68cHEdeKr29pW92bZA4SpQJ7AYhTt9j9kzSAU6Ld67rJqFoR7zt0bRgfdZCFDXhjRXp2UZCG2dwToSrTR9uU4FOZCrTVuAeTwsTZCmIfxvOGZARyoR8ajqn8X7ZCCXa7awgBDiauyZARx2nHCqlIIQa8udZB6aR76Of4H7wZDZD",
+          "Content-Type": "application/json"
+        }
+      }
+    ).then(response => {
+      console.log("✅ Mensaje WhatsApp enviado correctamente:", response.data);
+      res.status(200).json({ message: "Mensaje de WhatsApp enviado correctamente." });
+    }).catch(error => {
+      console.error("❌ Error al enviar mensaje de WhatsApp:", error.response?.data || error.message);
+      res.status(500).json({ error: "Error al enviar mensaje de WhatsApp" });
+    });
+  } catch (error) {
+    console.error("❌ Error en whatsappCita:", error.message);
+    res.status(500).json({ error: "Error al procesar la solicitud" });
+  }
+};
