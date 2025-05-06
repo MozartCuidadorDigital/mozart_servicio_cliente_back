@@ -170,7 +170,7 @@ exports.responseSeguimientoSaludMental = async (req, res) => {
 
       // Crear un nuevo documento en la colección de MongoDB
       const newEntry = new seguimientoSaludMental({
-        AtencionUrgenciaDepresion: structuredData.AtencionUrgenciaDepresion,
+        atencionUrgenciaSummary: structuredData.atencionUrgenciaSummary,
       });
 
       // Guardar en la base de datos
