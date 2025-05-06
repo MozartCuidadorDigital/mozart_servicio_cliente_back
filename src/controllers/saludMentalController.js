@@ -297,8 +297,8 @@ exports.whatsappMedicamento = async (req, res) => {
     
     const datosQuemados = {
       nombrePaciente: "Paciente 1",
-      medicamento: "Paracetamol",
-      concentracion: "500mg",
+      medicamento: "Clonazepam",
+      concentracion: "2mg",
       horaTomaFormateada: "8:00 AM",
       dosis: "1 tableta",
       presentacion: "Tabletas",
