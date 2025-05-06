@@ -261,11 +261,11 @@ exports.whatsappBienvenida = async (req, res) => {
                 },
                 {
                   type: "text",
-                  text: "usuario@ejemplo.com"
+                  text: "pacientenuevaeps"
                 },
                 {
                   type: "text",
-                  text: "123456789"
+                  text: "12345"
                 }
               ]
             }
@@ -296,7 +296,7 @@ exports.whatsappMedicamento = async (req, res) => {
     const { numero } = req.body;
     
     const datosQuemados = {
-      nombrePaciente: "Juan Pérez",
+      nombrePaciente: "Paciente 1",
       medicamento: "Paracetamol",
       concentracion: "500mg",
       horaTomaFormateada: "8:00 AM",
@@ -363,8 +363,8 @@ exports.whatsappCita = async (req, res) => {
     const { numero } = req.body;
     
     const datosQuemados = {
-      Paciente: "Juan Pérez",
-      fechaCitaFormateada: "15 de Marzo de 2024",
+      Paciente: "Paciente 1",
+      fechaCitaFormateada: "9 de Mayo de 2025",
       horaCitaFormateada: "10:30 AM",
       hospital: "Hospital Central"
     };
