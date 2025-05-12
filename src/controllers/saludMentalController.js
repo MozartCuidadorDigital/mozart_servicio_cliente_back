@@ -2,6 +2,7 @@ const axios = require('axios');
 const onBoardingSaludMental = require('../models/onBoardingSaludMental'); // Importar el modelo específico
 const entrevistaSaludMental = require('../models/entrevistaSaludMental'); // Importar el modelo
 const seguimientoSaludMental = require('../models/seguimientoSaludMental'); // Importar el modelo
+const { OpenAI } = require("openai");
 
 
 exports.onBoardingSaludMental = async (req, res) => {
@@ -418,5 +419,47 @@ exports.whatsappCita = async (req, res) => {
   } catch (error) {
     console.error("❌ Error en whatsappCita:", error.message);
     res.status(500).json({ error: "Error al procesar la solicitud" });
+  }
+};
+
+exports.chatConAsistenteHoteles = async (req, res) => {
+  try {
+    const { mensaje } = req.body;
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+    // Crea un hilo nuevo para cada conversación (puedes mejorar esto para mantener el hilo por usuario)
+    const thread = await openai.beta.threads.create();
+
+    // Añade el mensaje del usuario al hilo
+    await openai.beta.threads.messages.create(thread.id, {
+      role: "user",
+      content: mensaje,
+    });
+
+    // Llama al asistente personalizado
+    const run = await openai.beta.threads.runs.create(thread.id, {
+      assistant_id: process.env.ASSISTANT_ID,
+    });
+
+    // Espera a que termine el run (polling simple)
+    let runStatus;
+    do {
+      runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+      if (runStatus.status !== "completed") {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    } while (runStatus.status !== "completed");
+
+    // Obtiene la respuesta del asistente
+    const messages = await openai.beta.threads.messages.list(thread.id);
+    const respuesta = messages.data
+      .filter((msg) => msg.role === "assistant")
+      .map((msg) => msg.content.map((c) => c.text.value).join("\n"))
+      .join("\n");
+
+    res.json({ respuesta });
+  } catch (error) {
+    console.error("❌ Error en chatConAsistenteHoteles:", error.message);
+    res.status(500).json({ error: "Error al comunicarse con el asistente" });
   }
 };
