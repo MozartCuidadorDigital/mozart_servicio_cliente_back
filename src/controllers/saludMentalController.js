@@ -98,6 +98,70 @@ exports.seguimientoSaludMental = async (req, res) => {
   }
 };
 
+exports.oxiOnBoarding = async (req, res) => {
+  try {
+      const { numero } = req.body;
+
+      axios.post(
+          "https://api.vapi.ai/call/phone",
+          {
+              assistantId: "c7859f93-824e-4e4b-9e64-ad97426df0e2", // Reemplaza por el ID real
+              customer: { number: numero },
+              phoneNumberId: "7589b5b5-f1f3-42e6-b287-7da895d6a540"
+          },
+          {
+              headers: {
+                  Authorization: "Bearer d9424df4-37c9-4186-9b97-4c81be169786",
+                  "Content-Type": "application/json"
+              }
+          }
+      ).then(response => {
+          console.log("✅ Llamada Oxi OnBoarding iniciada correctamente:", response.data);
+          res.status(200).json({ message: "Llamada Oxi OnBoarding en proceso, el usuario será contactado." });
+
+      }).catch(error => {
+          console.error("❌ Error al iniciar la llamada Oxi OnBoarding:", error.response?.data || error.message);
+          res.status(500).json({ error: "Error al iniciar la llamada Oxi OnBoarding" });
+      });
+
+  } catch (error) {
+      console.error("❌ Error en oxiOnBoarding:", error.message);
+      res.status(500).json({ error: "Error al procesar la solicitud de llamada Oxi OnBoarding" });
+  }
+};
+
+exports.oxiTamizaje = async (req, res) => {
+  try {
+      const { numero } = req.body;
+
+      axios.post(
+          "https://api.vapi.ai/call/phone",
+          {
+              assistantId: "dc56652e-79da-4a92-a6f6-9d666344190f", // Reemplaza por el ID real
+              customer: { number: numero },
+              phoneNumberId: "7589b5b5-f1f3-42e6-b287-7da895d6a540"
+          },
+          {
+              headers: {
+                  Authorization: "Bearer d9424df4-37c9-4186-9b97-4c81be169786",
+                  "Content-Type": "application/json"
+              }
+          }
+      ).then(response => {
+          console.log("✅ Llamada Oxi Tamizaje iniciada correctamente:", response.data);
+          res.status(200).json({ message: "Llamada Oxi Tamizaje en proceso, el usuario será contactado." });
+
+      }).catch(error => {
+          console.error("❌ Error al iniciar la llamada Oxi Tamizaje:", error.response?.data || error.message);
+          res.status(500).json({ error: "Error al iniciar la llamada Oxi Tamizaje" });
+      });
+
+  } catch (error) {
+      console.error("❌ Error en oxiTamizaje:", error.message);
+      res.status(500).json({ error: "Error al procesar la solicitud de llamada Oxi Tamizaje" });
+  }
+};
+
 
 exports.responseOnBoardingSaludMental = async (req, res) => {
   try {

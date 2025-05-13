@@ -6,6 +6,8 @@ const {entrevistaSaludMental, responseEntrevistaSaludMental, consultEntrevistaSa
 const {seguimientoSaludMental, responseSeguimientoSaludMental, consultSeguimientoSaludMental} = require('../controllers/saludMentalController');
 const {whatsappBienvenida, whatsappMedicamento, whatsappCita} = require('../controllers/saludMentalController');
 const { chatConAsistenteHoteles } = require('../controllers/saludMentalController');
+const { oxiOnBoarding } = require('../controllers/saludMentalController');
+const { oxiTamizaje } = require('../controllers/saludMentalController');
 
 // Ruta para onBoarding Salud Mental
 router.post('/onBoardingSaludMental', onBoardingSaludMental);
@@ -29,5 +31,11 @@ router.post('/whatsappCita', whatsappCita);
 
 // Ruta para chat con el asistente de hoteles
 router.post('/chatHoteles', chatConAsistenteHoteles);
+
+// Rutas para Oxi OnBoarding
+router.post('/oxiOnBoarding', oxiOnBoarding);
+
+// Rutas para Oxi Tamizaje
+router.post('/oxiTamizaje', oxiTamizaje);
 
 module.exports = router;
