@@ -292,6 +292,7 @@ exports.whatsappBienvenida = async (req, res) => {
   }
 };
 
+// Función para enviar mensaje de WhatsApp para medicamento
 exports.whatsappMedicamento = async (req, res) => {
   try {
     const { numero } = req.body;
@@ -359,6 +360,7 @@ exports.whatsappMedicamento = async (req, res) => {
   }
 };
 
+
 exports.whatsappCita = async (req, res) => {
   try {
     const { numero } = req.body;
@@ -421,6 +423,7 @@ exports.whatsappCita = async (req, res) => {
     res.status(500).json({ error: "Error al procesar la solicitud" });
   }
 };
+
 
 exports.chatConAsistenteHoteles = async (req, res) => {
   try {
