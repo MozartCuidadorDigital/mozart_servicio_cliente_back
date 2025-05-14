@@ -3,6 +3,7 @@ const onBoardingSaludMental = require('../models/onBoardingSaludMental'); // Imp
 const entrevistaSaludMental = require('../models/entrevistaSaludMental'); // Importar el modelo
 const seguimientoSaludMental = require('../models/seguimientoSaludMental'); // Importar el modelo
 const oxiOnBoarding = require('../models/oxiOnBoarding'); // Importar el modelo
+const oxiTamizaje = require('../models/oxiTamizaje'); // Importar el modelo
 const { OpenAI } = require("openai");
 
 
@@ -280,6 +281,32 @@ exports.responseOxiOnBoarding = async (req, res) => {
   }
 };
 
+exports.responseOxiTamizaje = async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
+      const structuredData = message.analysis.structuredData;
+      console.log("📋 Datos recibidos en /api/responseOxiTamizaje:", structuredData);
+
+      const newTamizaje = new oxiTamizaje({
+        tamizajeOxyayuda: structuredData.tamizajeOxyayuda
+      });
+
+      await newTamizaje.save();
+
+      console.log("✅ Datos guardados correctamente en la colección oxiTamizaje");
+      res.status(200).json({ message: "Datos procesados y guardados correctamente en MongoDB" });
+    } else {
+      console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
+      res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
+    }
+  } catch (error) {
+    console.error("❌ Error en responseOxiTamizaje:", error.message);
+    res.status(500).json({ error: "Error al procesar los datos" });
+  }
+};
+
 exports.consultOnBoardingSaludMental = async (req, res) => {
   try {
     // Consultar todas las llamadas de la colección onBoardingSaludMental
@@ -320,11 +347,23 @@ exports.consultOxiOnBoarding = async (req, res) => {
   try {
     // Consultar todas las llamadas de la colección oxiOnBoarding
     const calls = await oxiOnBoarding.find();
-    
+
     res.status(200).json(calls);
   } catch (error) {
     console.error("❌ Error en consultOxiOnBoarding:", error.message);
     res.status(500).json({ error: "Error al consultar los datos de Oxi OnBoarding" });
+  }
+};
+
+exports.consultOxiTamizaje = async (req, res) => {
+  try {
+    // Consultar todas las llamadas de la colección oxiTamizaje
+    const tamizajes = await oxiTamizaje.find();
+
+    res.status(200).json(tamizajes);
+  } catch (error) {
+    console.error("❌ Error en consultOxiTamizaje:", error.message);
+    res.status(500).json({ error: "Error al consultar los datos de Oxi Tamizaje" });
   }
 };
 
