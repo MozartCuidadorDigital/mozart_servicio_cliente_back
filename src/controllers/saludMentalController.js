@@ -2,6 +2,7 @@ const axios = require('axios');
 const onBoardingSaludMental = require('../models/onBoardingSaludMental'); // Importar el modelo específico
 const entrevistaSaludMental = require('../models/entrevistaSaludMental'); // Importar el modelo
 const seguimientoSaludMental = require('../models/seguimientoSaludMental'); // Importar el modelo
+const oxiOnBoarding = require('../models/oxiOnBoarding'); // Importar el modelo
 const { OpenAI } = require("openai");
 
 
@@ -253,6 +254,32 @@ exports.responseSeguimientoSaludMental = async (req, res) => {
   }
 };
 
+exports.responseOxiOnBoarding = async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
+      const structuredData = message.analysis.structuredData;
+      console.log("📋 Datos recibidos en /api/responseOxiOnBoarding:", structuredData);
+
+      const newCall = new oxiOnBoarding({
+        onboardingInicialOxyayuda: structuredData.onboardingInicialOxyayuda
+      });
+
+      await newCall.save();
+
+      console.log("✅ Datos guardados correctamente en la colección oxiOnBoarding");
+      res.status(200).json({ message: "Datos procesados y guardados correctamente en MongoDB" });
+    } else {
+      console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
+      res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
+    }
+  } catch (error) {
+    console.error("❌ Error en responseOxiOnBoarding:", error.message);
+    res.status(500).json({ error: "Error al procesar los datos" });
+  }
+};
+
 exports.consultOnBoardingSaludMental = async (req, res) => {
   try {
     // Consultar todas las llamadas de la colección onBoardingSaludMental
@@ -286,6 +313,18 @@ exports.consultSeguimientoSaludMental = async (req, res) => {
   } catch (error) {
     console.error("❌ Error en consultSeguimientoSaludMental:", error.message);
     res.status(500).json({ error: "Error al consultar las entradas de SeguimientoSaludMental" });
+  }
+};
+
+exports.consultOxiOnBoarding = async (req, res) => {
+  try {
+    // Consultar todas las llamadas de la colección oxiOnBoarding
+    const calls = await oxiOnBoarding.find();
+    
+    res.status(200).json(calls);
+  } catch (error) {
+    console.error("❌ Error en consultOxiOnBoarding:", error.message);
+    res.status(500).json({ error: "Error al consultar los datos de Oxi OnBoarding" });
   }
 };
 
