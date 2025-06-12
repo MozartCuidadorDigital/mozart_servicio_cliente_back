@@ -25,7 +25,7 @@ const entrevistaSaludMentalSchema = mongoose.Schema({
       NivelEnergiaMotivacion: { type: String, required: true },
       ConductasRiesgo: { type: String, required: true },
       ParticipacionSocialComunitaria: { type: String, required: true },
-      ComentariosAdicionalesEvaluador: { type: String, required: true },
+      ComentariosAdicionalesEvaluador: { type: String },
     },
   },
   createdAt: {
@@ -33,7 +33,6 @@ const entrevistaSaludMentalSchema = mongoose.Schema({
     default: Date.now,
   },
 });
-
 const entrevistaSaludMental = mongoose.model('entrevistaSaludMental', entrevistaSaludMentalSchema);
 
 module.exports = entrevistaSaludMental;

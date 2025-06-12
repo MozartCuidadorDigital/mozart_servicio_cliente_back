@@ -4,6 +4,8 @@ const entrevistaSaludMental = require('../models/entrevistaSaludMental'); // Imp
 const seguimientoSaludMental = require('../models/seguimientoSaludMental'); // Importar el modelo
 const oxiOnBoarding = require('../models/oxiOnBoarding'); // Importar el modelo
 const oxiTamizaje = require('../models/oxiTamizaje'); // Importar el modelo
+const TranscripcionEntrevista = require('../models/transcripcionLlamadaSaludMental'); // asegúrate de importar el modelo
+const TranscripcionOnBoarding= require('../models/TranscripcionOnBoardingSaludMental');
 const { OpenAI } = require("openai");
 
 
@@ -169,29 +171,66 @@ exports.responseOnBoardingSaludMental = async (req, res) => {
   try {
     const { message } = req.body;
 
-    if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
-      const structuredData = message.analysis.structuredData;
-      console.log("📋 Datos recibidos en /api/responseOnBoardingSaludMental:", structuredData);
+    if (message?.type === 'end-of-call-report') {
+      const summaryRaw = message.analysis?.summary;
+      const transcript = message.artifact?.transcript;
 
-      // Crear un nuevo documento en la colección de MongoDB específica para onboarding
+      console.log("🧠 Summary recibido:", summaryRaw ?? "No disponible");
+      console.log("🗣️ Transcripción:", transcript ?? "No disponible");
+
+      if (!summaryRaw) {
+        return res.status(400).json({ error: "No se encontró el campo 'summary'." });
+      }
+
+      // Limpieza del summary
+      let parsedData;
+      try {
+        const cleanedSummary = typeof summaryRaw === 'string'
+          ? summaryRaw.replace(/```json|```/g, '').trim()
+          : summaryRaw;
+
+        parsedData = typeof cleanedSummary === 'string'
+          ? JSON.parse(cleanedSummary)
+          : cleanedSummary;
+
+        console.log("✅ Summary parseado como JSON:", parsedData);
+      } catch (err) {
+        console.error("❌ Error al parsear el summary:", err.message);
+        return res.status(400).json({ error: "El campo 'summary' no contiene un JSON válido." });
+      }
+
+      // Guardar el documento principal
       const newCall = new onBoardingSaludMental({
-        NombreCompleto: structuredData.NombreCompleto,
-        Telefono: structuredData.Telefono,
+        NombreCompleto: parsedData.NombreCompleto,
+        Telefono: parsedData.Telefono,
         DocumentoIdentidad: {
-          Tipo: structuredData.DocumentoIdentidad.Tipo,
-          Numero: structuredData.DocumentoIdentidad.Numero,
+          Tipo: parsedData.DocumentoIdentidad?.Tipo,
+          Numero: parsedData.DocumentoIdentidad?.Numero,
         },
-        FechaEntrevista: structuredData.FechaEntrevista,
+        FechaEntrevista: parsedData.FechaEntrevista,
       });
 
-      // Guardar en la base de datos
-      await newCall.save();
+      const savedCall = await newCall.save();
 
-      console.log("✅ Datos guardados correctamente en la colección OnBoardingSaludMental");
-      res.status(200).json({ message: "Datos procesados y guardados correctamente en MongoDB" });
+      console.log("✅ Onboarding guardado con ID:", savedCall._id);
+
+      // Guardar la transcripción si existe
+      if (transcript) {
+        const nuevaTranscripcion = new TranscripcionOnBoarding({
+          onboardingId: savedCall._id,
+          texto: transcript,
+        });
+
+        await nuevaTranscripcion.save();
+        console.log("📝 Transcripción guardada correctamente.");
+      } else {
+        console.log("⚠️ No se encontró transcripción para guardar.");
+      }
+
+      res.status(200).json({ message: "Datos y transcripción guardados correctamente." });
     } else {
-      console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
-      res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
+      console.log("⚠️ Tipo de mensaje no procesado:", message?.type);
+      res.status(200).json({ message: "Tipo de mensaje no procesado." });
     }
   } catch (error) {
     console.error("❌ Error en responseOnBoardingSaludMental:", error.message);
@@ -199,33 +238,112 @@ exports.responseOnBoardingSaludMental = async (req, res) => {
   }
 };
 
+exports.responseOxiAsistencia = async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (message?.type === 'end-of-call-report') {
+      const summaryRaw = message.analysis?.summary;
+
+      console.log("");
+      console.log("Esperando resumen");
+      console.log("📞 Resumen de Asistencia (sin parsear):", summaryRaw ?? "No disponible");
+
+      res.status(200).json({ message: "Resumen recibido correctamente en oxiAsistencia" });
+    } else {
+      console.log("⚠️ Tipo de mensaje no reconocido o no es un end-of-call-report");
+      res.status(400).json({ error: "Tipo de mensaje no válido o sin summary" });
+    }
+  } catch (error) {
+    console.error("❌ Error en handleVapiResponseOxiAsistencia:", error.message);
+    res.status(500).json({ error: "Error interno al procesar el resumen" });
+  }
+};
+
+
+
+
 exports.responseEntrevistaSaludMental = async (req, res) => {
   try {
     const { message } = req.body;
 
-    if (message?.type === 'end-of-call-report' && message?.analysis?.structuredData) {
-      const structuredData = message.analysis.structuredData;
-      console.log("📋 Datos recibidos en /api/responseEntrevistaSaludMental:", structuredData);
+    if (message?.type === 'end-of-call-report') {
+      
 
-      // Crear un nuevo documento en la colección de MongoDB
-      const newEntry = new entrevistaSaludMental({
-        TamizajeInicial: structuredData.TamizajeInicial // Usar directamente la estructura completa
-      });
+      if (!message.analysis) {
+        console.warn("⚠️ El campo 'analysis' no está presente en el mensaje.");
+      } else {
+        console.dir(message.analysis, { depth: null });
+      }
 
-      // Guardar en la base de datos
-      await newEntry.save();
+      const summary = message.analysis?.summary;
 
-      console.log("✅ Datos guardados correctamente en la colección EntrevistaSaludMental");
-      res.status(200).json({ message: "Datos procesados y guardados correctamente en MongoDB" });
+      console.log("📨 Resumen del mensaje recibido:");
+      console.log("➡️ Tipo:", message?.type);
+      console.log("🧠 Summary:", summary ?? "No disponible");
+      console.log("📊 StructuredData:", message?.analysis?.structuredData ?? "No disponible");
+
+      if (summary) {
+        let parsedData;
+
+        try {
+          const cleanedSummary = typeof summary === 'string'
+            ? summary.replace(/```json|```/g, '').trim()
+            : summary;
+
+          parsedData = typeof cleanedSummary === 'string'
+            ? JSON.parse(cleanedSummary)
+            : cleanedSummary;
+
+          console.log("📋 Datos parseados desde summary:", parsedData);
+        } catch (err) {
+          console.warn("⚠️ El campo 'summary' no es un JSON válido:", err.message);
+          return res.status(400).json({ error: "El campo 'summary' no contiene un JSON válido." });
+        }
+
+        // Guardar el documento principal
+        const newEntry = new entrevistaSaludMental({
+          TamizajeInicial: parsedData.TamizajeInicial
+        });
+
+        const savedEntry = await newEntry.save();
+
+        console.log("✅ Datos guardados correctamente en la colección EntrevistaSaludMental");
+
+        // Guardar la transcripción si existe
+        const transcript = message.artifact?.transcript;
+
+        if (transcript) {
+          const nuevaTranscripcion = new TranscripcionEntrevista({
+            entrevistaId: savedEntry._id,
+            texto: transcript,
+            fecha: new Date()
+          });
+
+          await nuevaTranscripcion.save();
+          console.log("📝 Transcripción guardada y asociada a entrevista:", savedEntry._id);
+        } else {
+          console.warn("⚠️ No se encontró transcripción en el mensaje.");
+        }
+
+        res.status(200).json({ message: "Datos y transcripción procesados correctamente" });
+      } else {
+        console.log("⚠️ Mensaje válido pero sin summary. Se omite guardado.");
+        res.status(200).json({ message: "Mensaje recibido, pero sin summary. No se guardó nada." });
+      }
     } else {
-      console.log("⚠️ No se encontró structuredData en el mensaje recibido.");
-      res.status(400).json({ error: "No se encontró structuredData en el mensaje recibido." });
+      console.log("⚠️ Mensaje no es del tipo 'end-of-call-report'.");
+      res.status(200).json({ message: "Mensaje no procesado (tipo diferente)." });
     }
   } catch (error) {
     console.error("❌ Error en responseEntrevistaSaludMental:", error.message);
     res.status(500).json({ error: "Error al procesar los datos" });
   }
 };
+
+
+
+
 
 exports.responseSeguimientoSaludMental = async (req, res) => {
   try {

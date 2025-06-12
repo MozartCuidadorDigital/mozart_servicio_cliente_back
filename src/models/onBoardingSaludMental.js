@@ -21,7 +21,7 @@ const onBoardingSaludMentalSchema = mongoose.Schema({
   },
   FechaEntrevista: {
     type: String,
-    required: true,
+    required: false,
   },
   createdAt: {
     type: Date,
