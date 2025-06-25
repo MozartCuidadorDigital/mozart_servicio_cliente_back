@@ -53,7 +53,7 @@ async function actualizarPaciente(parametros) {
   return { message: 'Datos actualizados', paciente };
 }
 
-// 4. Obtener historial clínico simulado
+// 4. Obtener historial clínico real desde la base de datos
 async function obtenerHistorialClinico(parametros) {
   const { documento } = parametros;
   if (!documento) {
@@ -63,12 +63,12 @@ async function obtenerHistorialClinico(parametros) {
   if (!paciente) {
     return { error: 'Paciente no encontrado.' };
   }
-  // Simulación de historial clínico
-  const historial = [
-    { fecha: '2024-06-01', condicion: 'dolor de rodilla', notas: 'En tratamiento.' },
-    { fecha: '2024-05-10', condicion: 'gripe', notas: 'Recuperado.' }
-  ];
-  return { nombre: paciente.nombre, ultima_condicion: historial[0].condicion, historial };
+  const reportes = await ReporteClinico.find({ paciente: paciente._id }).sort({ fecha: -1 });
+  let ultima_condicion = '';
+  if (reportes.length > 0) {
+    ultima_condicion = reportes[0].diagnostico || reportes[0].sintomas || '';
+  }
+  return { nombre: paciente.nombre, ultima_condicion, historial: reportes };
 }
 
 // 5. Guardar reporte clínico
