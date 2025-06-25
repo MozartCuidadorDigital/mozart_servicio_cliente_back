@@ -16,3 +16,11 @@ exports.crearCliente = async (req, res) => {
     res.status(500).json({ error: 'Error al crear el cliente.' });
   }
 }; 
+
+
+
+
+
+
+
+
