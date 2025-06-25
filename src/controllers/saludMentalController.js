@@ -5,7 +5,7 @@ const seguimientoSaludMental = require('../models/seguimientoSaludMental'); // I
 const oxiOnBoarding = require('../models/oxiOnBoarding'); // Importar el modelo
 const oxiTamizaje = require('../models/oxiTamizaje'); // Importar el modelo
 const TranscripcionEntrevista = require('../models/transcripcionLlamadaSaludMental'); // asegúrate de importar el modelo
-const TranscripcionOnBoarding= require('../models/TranscripcionOnBoardingSaludMental');
+const TranscripcionOnBoarding = require('../models/transcripcionOnBoardingSaludMental');
 const { OpenAI } = require("openai");
 
 
