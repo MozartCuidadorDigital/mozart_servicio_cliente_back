@@ -14,8 +14,8 @@ connectDB(); // Conectar a la base de datos
 
 
 // Aumentar el límite del tamaño del cuerpo
-app.use(bodyParser.json({ limit: '10mb' })); // Ajusta el límite según sea necesario
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+app.use(bodyParser.json({ limit: '50mb' })); // Ajusta el límite según sea necesario
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Middleware para permitir CORS desde cualquier origen (puedes restringirlo a tu frontend en producción)
 app.use(cors());
