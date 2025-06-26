@@ -36,7 +36,7 @@ async function textoAVoz({ texto, voice_id, model_id, output_format }) {
 }
 
 // ElevenLabs Speech to Text (Transcripción) compatible con serverless
-async function speechToText({ audio_base64, mime_type }) {
+async function speechToText({ audio_base64, mime_type, model_id }) {
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) {
     return { error: 'API key de ElevenLabs no configurada.' };
@@ -51,6 +51,7 @@ async function speechToText({ audio_base64, mime_type }) {
       filename: 'audio.wav',
       contentType: mime_type || 'audio/wav'
     });
+    formData.append('model_id', model_id || 'whisper-1');
     const response = await axios.post(
       'https://api.elevenlabs.io/v1/speech-to-text',
       formData,
