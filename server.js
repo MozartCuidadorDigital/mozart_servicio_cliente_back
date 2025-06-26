@@ -6,6 +6,7 @@ const saludMentalRoutes = require('./src/routes/saludMentalRoutes');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Importar cors
 const clienteRoutes = require('./src/routes/clienteRoutes');
+const elevenlabsRoutes = require('./src/routes/elevenlabsRoutes');
 const app = express();
 
 dotenv.config(); // Cargar variables de entorno
@@ -25,6 +26,7 @@ app.use(express.json());
 // Montar las rutas de llamadas
 app.use('/api/saludMental', saludMentalRoutes);
 app.use('/api/clientes', clienteRoutes);
+app.use('/api/elevenlabs', elevenlabsRoutes);
 
 // Ruta básica de prueba
 app.get('/', (req, res) => {
