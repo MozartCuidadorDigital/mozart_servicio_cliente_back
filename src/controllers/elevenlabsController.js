@@ -47,7 +47,7 @@ async function speechToText({ audio_base64, mime_type, model_id }) {
   try {
     const audioBuffer = Buffer.from(audio_base64, 'base64');
     const formData = new FormData();
-    formData.append('audio', audioBuffer, {
+    formData.append('file', audioBuffer, {
       filename: 'audio.wav',
       contentType: mime_type || 'audio/wav'
     });
