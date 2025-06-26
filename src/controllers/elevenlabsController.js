@@ -51,7 +51,7 @@ async function speechToText({ audio_base64, mime_type, model_id }) {
       filename: 'audio.wav',
       contentType: mime_type || 'audio/wav'
     });
-    formData.append('model_id', model_id || 'whisper-1');
+    formData.append('model_id', model_id || 'scribe_v1');
     const response = await axios.post(
       'https://api.elevenlabs.io/v1/speech-to-text',
       formData,
