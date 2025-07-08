@@ -3,6 +3,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./src/config/db');
 const saludMentalRoutes = require('./src/routes/saludMentalRoutes');
+const javesaludRoutes = require('./src/routes/javesaludRoutes'); // Importar las rutas de JaveSalud
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Importar cors
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.json());
 
 // Montar las rutas de llamadas
 app.use('/api/saludMental', saludMentalRoutes);
+app.use('/api/javeSalud', javesaludRoutes); // Ruta para JaveSalud
 
 // Ruta básica de prueba
 app.get('/', (req, res) => {
