@@ -1,5 +1,36 @@
 const axios = require('axios');
 
+exports.analizarEdadYLlamar = async (req, res) => {
+  try {
+    const { nombre, numero, fechaNacimiento } = req.body;
+
+    if (!numero || !fechaNacimiento) {
+      return res.status(400).json({ error: "Número y fecha de nacimiento son requeridos." });
+    }
+
+    // Calcular edad
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const m = hoy.getMonth() - nacimiento.getMonth();
+    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--;
+    }
+
+    console.log(`📞 Usuario con ${edad} años. Enrutando llamada...`);
+
+    // Redirigir según edad
+    if (edad > 30) {
+      return exports.iniciarLlamadaVph(req, res);
+    } else {
+      return exports.iniciarLlamadaCitologia(req, res);
+    }
+
+  } catch (error) {
+    console.error("❌ Error en analizarEdadYLlamar:", error.message);
+    res.status(500).json({ error: "Error al procesar la llamada por edad." });
+  }
+};
 
 exports.iniciarLlamadaCitologia = async (req, res) => {
   try {
@@ -67,137 +98,29 @@ exports.iniciarLlamadaVph = async (req, res) => {
 
 
 
-exports.whatsappBienvenida = async (req, res) => {
+exports.enviarWhatsApp = async (req, res) => {
   try {
-    const { numero } = req.body;
-    
-    axios.post(
-      "https://graph.facebook.com/v22.0/587113451151885/messages",
+    const { nombre, numero, fechaNacimiento } = req.body;
+
+    const response = await axios.post(
+      "https://mozartcalltwilio-production.up.railway.app/whatsapp/tamizaje/automatico",
       {
-        messaging_product: "whatsapp",
-        to: numero,
-        type: "template",
-        template: {
-          name: "notificacion_nuevo_paciente_new",
-          language: {
-            code: "en"
-          },
-          components: [
-            {
-              type: "header",
-              parameters: [
-                {
-                  type: "image",
-                  image: {
-                    link: "https://adresfosyga.co/wp-content/uploads/2020/05/Nueva-EPS-Logo.png"
-                  }
-                }
-              ]
-            },
-            {
-              type: "body",
-              parameters: [
-                {
-                  type: "text",
-                  text: "https://mozart-nuevo-fronted.vercel.app/"
-                },
-                {
-                  type: "text",
-                  text: "pacientenuevaeps"
-                },
-                {
-                  type: "text",
-                  text: "12345"
-                }
-              ]
-            }
-          ]
-        }
+        nombre,
+        numero,
+        fechaNacimiento,
       },
       {
         headers: {
-          Authorization: "Bearer EAAaTwNpMCk0BOZCdHI0f18pn7lTw8DQ8G68cHEdeKr29pW92bZA4SpQJ7AYhTt9j9kzSAU6Ld67rJqFoR7zt0bRgfdZCFDXhjRXp2UZCG2dwToSrTR9uU4FOZCrTVuAeTwsTZCmIfxvOGZARyoR8ajqn8X7ZCCXa7awgBDiauyZARx2nHCqlIIQa8udZB6aR76Of4H7wZDZD",
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       }
-    ).then(response => {
-      console.log("✅ Mensaje WhatsApp enviado correctamente:", response.data);
-      res.status(200).json({ message: "Mensaje de WhatsApp enviado correctamente." });
-    }).catch(error => {
-      console.error("❌ Error al enviar mensaje de WhatsApp:", error.response?.data || error.message);
-      res.status(500).json({ error: "Error al enviar mensaje de WhatsApp" });
-    });
+    );
+
+    console.log("✅ WhatsApp enviado correctamente:", response.data);
+    res.status(200).json({ message: "Mensaje de WhatsApp enviado correctamente." });
+
   } catch (error) {
-    console.error("❌ Error en whatsappBienvenida:", error.message);
-    res.status(500).json({ error: "Error al procesar la solicitud" });
+    console.error("❌ Error al enviar mensaje WhatsApp:", error.response?.data || error.message);
+    res.status(500).json({ error: "Error al enviar mensaje de WhatsApp." });
   }
 };
-
-// Función para enviar mensaje de WhatsApp para medicamento
-exports.whatsappMedicamento = async (req, res) => {
-  try {
-    const { numero } = req.body;
-    
-    const datosQuemados = {
-      nombrePaciente: "Paciente 1",
-      medicamento: "Clonazepam",
-      concentracion: "2mg",
-      horaTomaFormateada: "8:00 AM",
-      dosis: "1 tableta",
-      presentacion: "Tabletas",
-      viaAdministracion: "Oral",
-      indicaciones: "Tomar con agua"
-    };
-
-    axios.post(
-      "https://graph.facebook.com/v22.0/587113451151885/messages",
-      {
-        messaging_product: "whatsapp",
-        to: numero,
-        type: "template",
-        template: {
-          name: "nuevo_medicamento_new",
-          language: {
-            code: "en"
-          },
-          components: [
-            {
-              type: "header",
-              parameters: [
-                {
-                  type: "image",
-                  image: {
-                    link: "https://adresfosyga.co/wp-content/uploads/2020/05/Nueva-EPS-Logo.png"
-                  }
-                }
-              ]
-            },
-            {
-              type: "body",
-              parameters: Object.entries(datosQuemados).map(([_, value]) => ({
-                type: "text",
-                text: value
-              }))
-            }
-          ]
-        }
-      },
-      {
-        headers: {
-          Authorization: "Bearer EAAaTwNpMCk0BOZCdHI0f18pn7lTw8DQ8G68cHEdeKr29pW92bZA4SpQJ7AYhTt9j9kzSAU6Ld67rJqFoR7zt0bRgfdZCFDXhjRXp2UZCG2dwToSrTR9uU4FOZCrTVuAeTwsTZCmIfxvOGZARyoR8ajqn8X7ZCCXa7awgBDiauyZARx2nHCqlIIQa8udZB6aR76Of4H7wZDZD",
-          "Content-Type": "application/json"
-        }
-      }
-    ).then(response => {
-      console.log("✅ Mensaje WhatsApp enviado correctamente:", response.data);
-      res.status(200).json({ message: "Mensaje de WhatsApp enviado correctamente." });
-    }).catch(error => {
-      console.error("❌ Error al enviar mensaje de WhatsApp:", error.response?.data || error.message);
-      res.status(500).json({ error: "Error al enviar mensaje de WhatsApp" });
-    });
-  } catch (error) {
-    console.error("❌ Error en whatsappMedicamento:", error.message);
-    res.status(500).json({ error: "Error al procesar la solicitud" });
-  }
-};
-
