@@ -71,7 +71,7 @@ exports.iniciarLlamadaVph = async (req, res) => {
       axios.post(
           "https://api.vapi.ai/call/phone",
           {
-              assistantId: "2fe483fb-46ef-4d4d-af2b-b46d27bc303a", // Reemplaza por el ID real
+              assistantId: "2fe483fb-46ef-4d4d-af2b-b46d27bc303a", // Reemplaza por el ID real cgc
               customer: { number: numero },
               phoneNumberId: "7589b5b5-f1f3-42e6-b287-7da895d6a540"
           },
