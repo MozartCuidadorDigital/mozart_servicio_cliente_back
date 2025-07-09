@@ -34,7 +34,7 @@ exports.analizarEdadYLlamar = async (req, res) => {
 
 exports.iniciarLlamadaCitologia = async (req, res) => {
   try {
-      const { celular } = req.body;
+      const { nombrePaciente, celular, fechaNacimiento } = req.body;
 
       if (!celular) {
           return res.status(400).json({ error: "El número de teléfono es necesario para iniciar la llamada." });
