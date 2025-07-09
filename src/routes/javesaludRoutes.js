@@ -1,7 +1,7 @@
-// backend/src/routes/callRoutes.js
+// backend/src/routes/javesaludRoutes.js
 const express = require('express');
 const router = express.Router();
-const {iniciarLlamadaCitologia, iniciarLlamadaVph, consultiniciarLlamadaCitologia} = require('../controllers/javesaludController');
+const {iniciarLlamadaCitologia, iniciarLlamadaVph, analizarEdadYLlamar,enviarWhatsApp} = require('../controllers/javesaludController');
 const {whatsappBienvenida, whatsappMedicamento, whatsappCita} = require('../controllers/saludMentalController');
 const controller = require('../controllers/javesaludController');
 
@@ -9,9 +9,9 @@ const controller = require('../controllers/javesaludController');
 router.post('/iniciarLlamadaCitologia', iniciarLlamadaCitologia);
 router.post('/iniciarLlamadaVph', iniciarLlamadaVph);
 
-router.post('/api/llamada', controller.analizarEdadYLlamar);
+router.post('/llamada', analizarEdadYLlamar);
 // Rutas para WhatsApp
-router.post('/api/whatsapp', controller.enviarWhatsApp);
+router.post('/whatsapp', enviarWhatsApp);
 
 
 

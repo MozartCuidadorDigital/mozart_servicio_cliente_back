@@ -30,7 +30,7 @@ app.use('/api/saludMental', saludMentalRoutes);
 app.use('/api/clientes', clienteRoutes);
 app.use('/api/elevenlabs', elevenlabsRoutes);
 app.use('/api/ollama', ollamaRoutes);
-app.use('/api/javeSalud', javesaludRoutes); // Ruta para JaveSalud}
+app.use('/api/javesalud', javesaludRoutes); // Ruta para JaveSalud
 
 // Ruta básica de prueba
 app.get('/', (req, res) => {
