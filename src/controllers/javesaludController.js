@@ -101,7 +101,7 @@ exports.iniciarLlamadaVph = async (req, res) => {
 exports.enviarWhatsApp = async (req, res) => {
   try {
     const { nombre, numero, fechaNacimiento } = req.body;
-    console.log('📩 WhatsApp recibido:', { nombre, numero, fechaNacimiento });
+    console.log('📩 WhatsApp recibido:', { celular: numero, nombrePaciente: nombre, fechaNacimiento });
 
     const response = await axios.post(
       "https://mozartcalltwilio-production.up.railway.app/whatsapp/tamizaje/automatico",
