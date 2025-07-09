@@ -2,10 +2,10 @@ const axios = require('axios');
 
 exports.analizarEdadYLlamar = async (req, res) => {
   try {
-    const { nombre, numero, fechaNacimiento } = req.body;
+    const { nombrePaciente, celular, fechaNacimiento } = req.body;
 
-    if (!numero || !fechaNacimiento) {
-      return res.status(400).json({ error: "Número y fecha de nacimiento son requeridos." });
+    if (!nombrePaciente || !celular || !fechaNacimiento) {
+      return res.status(400).json({ error: "Todos los campos son requeridos." });
     }
 
     // Calcular edad
@@ -34,13 +34,13 @@ exports.analizarEdadYLlamar = async (req, res) => {
 
 exports.iniciarLlamadaCitologia = async (req, res) => {
   try {
-      const { numero } = req.body;
+      const { celular } = req.body;
 
       axios.post(
           "https://api.vapi.ai/call/phone",
           {
               assistantId: "8e33fd51-f6d7-43a6-a29f-bcc8a21e750f", // Reemplaza por el ID real
-              customer: { number: numero },
+              customer: { number: celular },
               phoneNumberId: "7589b5b5-f1f3-42e6-b287-7da895d6a540"
           },
           {
@@ -66,13 +66,13 @@ exports.iniciarLlamadaCitologia = async (req, res) => {
 
 exports.iniciarLlamadaVph = async (req, res) => {
   try {
-      const { numero } = req.body;
+      const { celular } = req.body;
 
       axios.post(
           "https://api.vapi.ai/call/phone",
           {
               assistantId: "2fe483fb-46ef-4d4d-af2b-b46d27bc303a", // Reemplaza por el ID real cgc
-              customer: { number: numero },
+              customer: { number: celular },
               phoneNumberId: "7589b5b5-f1f3-42e6-b287-7da895d6a540"
           },
           {
@@ -100,14 +100,14 @@ exports.iniciarLlamadaVph = async (req, res) => {
 
 exports.enviarWhatsApp = async (req, res) => {
   try {
-    const { nombre, numero, fechaNacimiento } = req.body;
-    console.log('📩 WhatsApp recibido:', { celular: numero, nombrePaciente: nombre, fechaNacimiento });
+    const { nombrePaciente, celular, fechaNacimiento } = req.body;
+    console.log('📩 WhatsApp recibido:', { celular, nombrePaciente, fechaNacimiento });
 
     const response = await axios.post(
       "https://mozartcalltwilio-production.up.railway.app/whatsapp/tamizaje/automatico",
       {
-        celular: numero,
-        nombrePaciente: nombre,
+        celular,
+        nombrePaciente,
         fechaNacimiento,
       },
       {
