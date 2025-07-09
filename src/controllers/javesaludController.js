@@ -36,12 +36,26 @@ exports.iniciarLlamadaCitologia = async (req, res) => {
   try {
       const { celular } = req.body;
 
+      if (!celular) {
+          return res.status(400).json({ error: "El número de teléfono es necesario para iniciar la llamada." });
+      }
+      const patientInfoForVapi = {
+        nombrePaciente,
+        celular,
+        fechaNacimiento,
+      };
+
+
+              
       axios.post(
           "https://api.vapi.ai/call/phone",
           {
               assistantId: "8e33fd51-f6d7-43a6-a29f-bcc8a21e750f", // Reemplaza por el ID real
               customer: { number: celular },
-              phoneNumberId: "7589b5b5-f1f3-42e6-b287-7da895d6a540"
+              phoneNumberId: "7589b5b5-f1f3-42e6-b287-7da895d6a540",
+              assistantOverrides: {
+                    variableValues: patientInfoForVapi,
+                },
           },
           {
               headers: {
