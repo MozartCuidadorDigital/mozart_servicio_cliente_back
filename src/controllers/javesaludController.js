@@ -106,8 +106,8 @@ exports.enviarWhatsApp = async (req, res) => {
     const response = await axios.post(
       "https://mozartcalltwilio-production.up.railway.app/whatsapp/tamizaje/automatico",
       {
-        nombre,
-        numero,
+        celular: numero,
+        nombrePaciente: nombre,
         fechaNacimiento,
       },
       {
