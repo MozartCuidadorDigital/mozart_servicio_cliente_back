@@ -10,7 +10,7 @@ router.post('/iniciarLlamadaCitologia', iniciarLlamadaCitologia);
 router.post('/iniciarLlamadaVph', iniciarLlamadaVph);
 
 router.post('/llamada', analizarEdadYLlamar);
-// Rutas para WhatsApp
+// Rutas para WhatsAp
 router.post('/whatsapp', enviarWhatsApp);
 
 
