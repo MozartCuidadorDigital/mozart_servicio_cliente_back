@@ -8,6 +8,7 @@ const {whatsappBienvenida, whatsappMedicamento, whatsappCita} = require('../cont
 const { chatConAsistenteHoteles } = require('../controllers/saludMentalController');
 const { responseOxiAsistencia, oxiOnBoarding, responseOxiOnBoarding, consultOxiOnBoarding } = require('../controllers/saludMentalController');
 const { oxiTamizaje, responseOxiTamizaje, consultOxiTamizaje } = require('../controllers/saludMentalController');
+const { citasCemdi } = require('../controllers/cemdicontroller');
 
 // Ruta para onBoarding Salud Mental
 router.post('/onBoardingSaludMental', onBoardingSaludMental);
@@ -23,6 +24,9 @@ router.get('/consultEntrevistaSaludMental', consultEntrevistaSaludMental);
 router.post('/seguimientoSaludMental', seguimientoSaludMental);
 router.post('/responseseguimientoSaludMental', responseSeguimientoSaludMental);
 router.get('/consultSeguimientoSaludMental', consultSeguimientoSaludMental);
+
+// Ruta para CITAS CEMDI
+router.post('/citasCemdi', citasCemdi);
 
 // Rutas para WhatsApp
 router.post('/whatsappBienvenida', whatsappBienvenida);
