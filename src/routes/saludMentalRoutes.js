@@ -8,7 +8,7 @@ const {whatsappBienvenida, whatsappMedicamento, whatsappCita} = require('../cont
 const { chatConAsistenteHoteles } = require('../controllers/saludMentalController');
 const { responseOxiAsistencia, oxiOnBoarding, responseOxiOnBoarding, consultOxiOnBoarding } = require('../controllers/saludMentalController');
 const { oxiTamizaje, responseOxiTamizaje, consultOxiTamizaje } = require('../controllers/saludMentalController');
-const { citasCemdi } = require('../controllers/cemdicontroller');
+const { citasCemdi } = require('../controllers/cemdicontroller.js');
 
 // Ruta para onBoarding Salud Mental
 router.post('/onBoardingSaludMental', onBoardingSaludMental);
