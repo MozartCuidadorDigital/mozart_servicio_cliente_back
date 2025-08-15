@@ -508,7 +508,7 @@ exports.whatsappBienvenida = async (req, res) => {
                 {
                   type: "image",
                   image: {
-                    link: "https://adresfosyga.co/wp-content/uploads/2020/05/Nueva-EPS-Logo.png"
+                    link: "https://mozartimages.s3.us-east-1.amazonaws.com/Logo_Mozart_color.png"
                   }
                 }
               ]
@@ -518,7 +518,7 @@ exports.whatsappBienvenida = async (req, res) => {
               parameters: [
                 {
                   type: "text",
-                  text: "https://mozart-nuevo-fronted.vercel.app/"
+                  text: "https://plataforma.mozartai.com.co/"
                 },
                 {
                   type: "text",
@@ -586,7 +586,7 @@ exports.whatsappMedicamento = async (req, res) => {
                 {
                   type: "image",
                   image: {
-                    link: "https://adresfosyga.co/wp-content/uploads/2020/05/Nueva-EPS-Logo.png"
+                    link: "https://mozartimages.s3.us-east-1.amazonaws.com/Logo_Mozart_color.png"
                   }
                 }
               ]
@@ -650,7 +650,7 @@ exports.whatsappCita = async (req, res) => {
                 {
                   type: "image",
                   image: {
-                    link: "https://adresfosyga.co/wp-content/uploads/2020/05/Nueva-EPS-Logo.png"
+                    link: "https://mozartimages.s3.us-east-1.amazonaws.com/Logo_Mozart_color.png"
                   }
                 }
               ]
