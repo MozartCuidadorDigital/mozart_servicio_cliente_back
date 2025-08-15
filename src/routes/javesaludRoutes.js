@@ -5,7 +5,7 @@ const {iniciarLlamadaCitologia, iniciarLlamadaVph, analizarEdadYLlamar,enviarWha
 const {whatsappBienvenida, whatsappMedicamento, whatsappCita} = require('../controllers/saludMentalController');
 const controller = require('../controllers/javesaludController');
 
-// Ruta para Llamadas de Tamizaj
+// Ruta para Llamadas de Tamiza
 router.post('/iniciarLlamadaCitologia', iniciarLlamadaCitologia);
 router.post('/iniciarLlamadaVph', iniciarLlamadaVph);
 
